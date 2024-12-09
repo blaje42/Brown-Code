@@ -47,7 +47,7 @@ def print_interview_table(outfile, header, slot_dates, slot_times, names):
     outfile.write(title)
 
     header = """\
-<table>
+<table style="font-family:arial;">
   <tr>
    <th style="text-align:center; font-size:120%" width=25%" bgcolor="#5D7B9D"><font color="#fff">Time</font></th> 
    <th style="text-align:center; font-size:120%" width=50%" bgcolor="#5D7B9D"><font color="#fff">Interview</font></th>   
@@ -72,10 +72,6 @@ def print_interview_table(outfile, header, slot_dates, slot_times, names):
         
         rowtext = f"""<td style="text-align:center" width=50%>{names[i]}</td></tr>"""
 
- #       if zoomlinks[i] != "":
- #           rowtext = f"""<td style="text-align:center" width=50%><a href="{zoomlinks[i]}" target="_blank">{names[i]}</a></td></tr>"""
- #       else:
- #           rowtext = f"""<td style="text-align:center" width=50%>{names[i]}</td></tr>"""
     
         outfile.write(rowtext)
     outfile.write("</table>")
@@ -90,14 +86,12 @@ def print_extras(outfile):
 
 <br>
 <center>
-<h3>Thursday, February 13 </h3>
+<h3>Thursday, February 13</h3>
 </center>
 
-<table>
+<table style="font-family:arial;">
   <tr>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Time</font></th>
-   <th style="text-align:center; font-size:120%" width=50%" bgcolor="#e5b8b7"><font color="#000">Event</font></th>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Location</font></th>
+   <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
   </tr>
   
   <tbody>
@@ -138,11 +132,9 @@ def print_extras(outfile):
 <h3>Friday, February 14 (Morning) </h3>
 </center>
 
-<table>
+<table style="font-family:arial;">
   <tr>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Time</font></th>
-   <th style="text-align:center; font-size:120%" width=50%" bgcolor="#e5b8b7"><font color="#000">Event</font></th>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Location</font></th>
+   <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
   </tr>
 </table>
 
@@ -152,11 +144,9 @@ def print_extras(outfile):
 <h3>Friday, February 14 (Afternoon) </h3>
 </center>
 
-<table>
+<table style="font-family:arial;">
   <tr>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Time</font></th>
-   <th style="text-align:center; font-size:120%" width=50%" bgcolor="#e5b8b7"><font color="#000">Event</font></th>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Location</font></th>
+  <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
   </tr>
 </table>
 
@@ -165,11 +155,9 @@ def print_extras(outfile):
 <h3>Saturday, February 15</h3>
 </center>
 
-<table>
+<table style="font-family:arial;">
   <tr>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Time</font></th>
-   <th style="text-align:center; font-size:120%" width=50%" bgcolor="#e5b8b7"><font color="#000">Event</font></th>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#e5b8b7"><font color="#000">Location</font></th>
+  <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
   </tr>
   <tr>
   <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 9:00am - 12:00pm  </td>
@@ -182,9 +170,9 @@ def print_extras(outfile):
   <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Check with your host for more details </td>
   </tr>
   <tr>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Departures </strong> </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> You can depart from the hotel at any point after check-out, when you are ready to leave. You can arrange your own transportation and be reimbursed for your Uber or taxi.   </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF">  </td>
+  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> All day </td>
+  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF">  <strong> Departures </strong>  </td>
+  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> You can depart from the hotel at any point after check-out, when you are ready to leave. You can arrange your own transportation and be reimbursed for your Uber or taxi. </td>
   </tr>
 </table>
 
@@ -265,7 +253,7 @@ if __name__ == "__main__":
     with open("./schedule_style.dat") as s:
         style = s.read()
 
-    interviews = interviews.T
+    interviews = interviews.T #Transpose interview matrix table to make applicants column headers
     for r in interviews.columns:
         recruit_last = students.loc[r]["LastName"]
         recruit_goesby = students.loc[r]["GoesBy"]
@@ -283,7 +271,10 @@ if __name__ == "__main__":
             recruit_host_email2 = current_students.loc[recruit_host_last2]["Email"]
         else:
             recruit_host_goesby2, recruit_host_email2 = None, None
+            
+#######
 
+        #Find non-empty interview slots for recruit r
         new_slots = interviews.loc[:,r].values
         interviewers = interviews.loc[new_slots>0].index.values
         new_slots = new_slots[new_slots>0].astype(int)
@@ -291,8 +282,8 @@ if __name__ == "__main__":
         times = []
         location = []
         names = []
-        zoomlinks = []
 
+        #For each interview, pull relevant interviewer data
         if len(new_slots):
             htmlfile = f"./html/applicants/{r}_Brown_Schedule.html"
             pdffile = htmlfile.replace("html","pdf")
@@ -312,11 +303,14 @@ if __name__ == "__main__":
                                     names.append(f["FacultyFirst"]+ " " + interviewer + " (grad student)")
                                 else:
                                     names.append(f["FacultyFirst"] + " " + interviewer)
+                                    
                             
                 outfile.write(opening.format(recruit_goesby=recruit_goesby, recruit_last=recruit_last))
                 outfile.write(style)
                 outfile.write(body1.format(recruit_goesby=recruit_goesby, recruit_last=recruit_last, recruit_itinerary=recruit_itinerary,host_last=recruit_host_last, host_first=recruit_host_goesby))
                 print_interview_table(outfile, "Interviews (Friday, February 14)", times, names, location)
+            
+#######
                 
                 print_extras(outfile)
                 if not recruit_host_last2: 
