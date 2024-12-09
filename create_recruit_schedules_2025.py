@@ -41,7 +41,7 @@ Your host: {host_first} {host_last}
 """
 
 
-def print_interview_table(outfile, header, slot_dates, slot_times, names):
+def print_interview_table(outfile, header, slot_times, names, slot_location):
 
     title = f"""<br><h3><center>{header}</center></h3>"""
     outfile.write(title)
@@ -58,19 +58,19 @@ def print_interview_table(outfile, header, slot_dates, slot_times, names):
     outfile.write(header)
 
     colors = ["white", "light-gray"]
-    for i in range(len(slot_dates)):
+    for i in range(len(slot_times)):
         color = colors[i%2]
         rowtext = f"""\
 <tr style="background-color:{color}">
- <td style="text-align:center" width=25%>{slot_dates[i]}</td>
-"""
-        outfile.write(rowtext)
-        rowtext = f"""\
  <td style="text-align:center" width=25%>{slot_times[i]}</td>
 """
         outfile.write(rowtext)
+        rowtext = f"""\
+ <td style="text-align:center" width=25%>{names[i]}</td>
+"""
+        outfile.write(rowtext)
         
-        rowtext = f"""<td style="text-align:center" width=50%>{names[i]}</td></tr>"""
+        rowtext = f"""<td style="text-align:center" width=50%>{slot_location[i]}</td></tr>"""
 
     
         outfile.write(rowtext)
@@ -230,7 +230,7 @@ Contacts
 </html>
 """
 
-def load_interview_data(filename='./Appl_Fac Interviews_2024.xlsx'):
+def load_interview_data(filename='./Appl_Fac Interviews_2025.xlsx'):
     slots = pd.read_excel(filename, sheet_name="InterviewSlots",
         index_col=0, dtype={'a': int})
     faculty = pd.read_excel(filename,sheet_name="FacultyInfo", index_col=0)
@@ -275,40 +275,70 @@ if __name__ == "__main__":
 #######
 
         #Find non-empty interview slots for recruit r
-        new_slots = interviews.loc[:,r].values
-        interviewers = interviews.loc[new_slots>0].index.values
-        new_slots = new_slots[new_slots>0].astype(int)
+        interview_slots = interviews.loc[:,r].values
+        interviewers = interviews.loc[interview_slots>0].index.values
+        interview_slots = interview_slots[interview_slots>0].astype(int)
 
         times = []
         location = []
         names = []
+        time_slot = []
+        text1 = "Optional tours"
+        text2 = "Meet in SFH 3rd floor lobby"
 
         #For each interview, pull relevant interviewer data
-        if len(new_slots):
+        if len(interview_slots):
             htmlfile = f"./html/applicants/{r}_Brown_Schedule.html"
             pdffile = htmlfile.replace("html","pdf")
             with open(htmlfile, "w") as outfile:
-                hours = [800, 830, 900, 930, 1000, 1030, 1100, 1130, 1300, 1330, 1400, 1430, 1500, 1530, 1600, 1630]
-                for daycode in [180000, 190000, 220000, 230000]:
+                hours = [1100, 1130, 1300, 1330, 1400, 1430, 1500, 1530, 1600, 1630]
+                for daycode in [140000]:
                     for i in [h+daycode for h in hours]:
-                        if i in new_slots:
-                            if (new_slots==i).sum() != 1:
+                        time_slot.append(i)
+                        if i in interview_slots:
+                            if (interview_slots==i).sum() != 1:
                                 print("Error!");
                             else:
-                                interviewer = interviewers[new_slots==i][0]
-                                times.append(slots.loc[i]["Time"])                             
+                                interviewer = interviewers[interview_slots==i][0]
+                                times.append(slots.loc[i]["Time"])
                                 f = faculty.loc[interviewer]
                                 location.append(f["RoomID"])
                                 if interviewer in current_students.index:
-                                    names.append(f["FacultyFirst"]+ " " + interviewer + " (grad student)")
+                                    names.append("Graduate Student Interview: " + f["FacultyFirst"]+ " " + interviewer)
                                 else:
-                                    names.append(f["FacultyFirst"] + " " + interviewer)
+                                    names.append("Faculty Interview: "+ f["FacultyFirst"] + " " + interviewer)
+                        if i not in interview_slots: #If no interview, append info for optional tours
+                            times.append(slots.loc[i]["Time"]) 
+                            names.append(text1)
+                            location.append(text2)
+                
+                #Append events that are the same for every itinerary
+                times.append("12:00pm - 12:55pm")
+                names.append("Lunch")
+                time_slot.append(141200)
+                location.append("SFH 3rd floor lobby")
+                
+                times.append("9:00am - 10:00am")
+                names.append("Welcome meeting")
+                time_slot.append(140900)
+                location.append("Peterutti Lounge")
+                
+                times.append("10:00am - 10:55am")
+                names.append("Faculty Data Blitz")
+                time_slot.append(141000)
+                location.append("Peterutti Lounge")
+ 
+                #Sort all variables by time slot ID so they are in order of time
+                sorted_pairs = sorted(zip(time_slot, times, names, location))
+                times_sorted = [v2 for v1, v2, v3, v4 in sorted_pairs]
+                names_sorted = [v3 for v1, v2, v3, v4 in sorted_pairs]
+                location_sorted = [v4 for v1, v2, v3, v4 in sorted_pairs]
                                     
                             
                 outfile.write(opening.format(recruit_goesby=recruit_goesby, recruit_last=recruit_last))
                 outfile.write(style)
                 outfile.write(body1.format(recruit_goesby=recruit_goesby, recruit_last=recruit_last, recruit_itinerary=recruit_itinerary,host_last=recruit_host_last, host_first=recruit_host_goesby))
-                print_interview_table(outfile, "Interviews (Friday, February 14)", times, names, location)
+                print_interview_table(outfile, "Interviews (Friday, February 14)", times_sorted, names_sorted, location_sorted)
             
 #######
                 
