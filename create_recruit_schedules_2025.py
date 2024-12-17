@@ -5,6 +5,11 @@ import pandas as pd
 import numpy as np
 import platform
 
+#TO DO:
+    #Add GPP contingency
+    #Change location of "interview" schedule
+    #Format for printing
+
 opening = r"""
 <!DOCTYPE html>  
 <html lang="US">
@@ -129,7 +134,7 @@ def print_extras(outfile):
 
 <br>
 <center>
-<h3>Friday, February 14 (Morning) </h3>
+<h3>Friday, February 14 </h3>
 </center>
 
 <table style="font-family:arial;">
@@ -140,15 +145,7 @@ def print_extras(outfile):
 
 <div style="page-break-before:always;">
 
-<center>
-<h3>Friday, February 14 (Afternoon) </h3>
-</center>
 
-<table style="font-family:arial;">
-  <tr>
-  <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
-  </tr>
-</table>
 
 <br>
 <center>
@@ -291,26 +288,24 @@ if __name__ == "__main__":
             htmlfile = f"./html/applicants/{r}_Brown_Schedule.html"
             pdffile = htmlfile.replace("html","pdf")
             with open(htmlfile, "w") as outfile:
-                hours = [1100, 1130, 1300, 1330, 1400, 1430, 1500, 1530, 1600, 1630]
-                for daycode in [140000]:
-                    for i in [h+daycode for h in hours]:
-                        time_slot.append(i)
-                        if i in interview_slots:
-                            if (interview_slots==i).sum() != 1:
-                                print("Error!");
+                for i in slots.index:
+                    time_slot.append(i)
+                    if i in interview_slots:
+                        if (interview_slots==i).sum() != 1:
+                            print("Error!");
+                        else:
+                            interviewer = interviewers[interview_slots==i][0]
+                            times.append(slots.loc[i]["Time"])
+                            f = faculty.loc[interviewer]
+                            location.append(f["RoomID"])
+                            if interviewer in current_students.index:
+                                names.append("Graduate Student Interview: " + f["FacultyFirst"]+ " " + interviewer)
                             else:
-                                interviewer = interviewers[interview_slots==i][0]
-                                times.append(slots.loc[i]["Time"])
-                                f = faculty.loc[interviewer]
-                                location.append(f["RoomID"])
-                                if interviewer in current_students.index:
-                                    names.append("Graduate Student Interview: " + f["FacultyFirst"]+ " " + interviewer)
-                                else:
-                                    names.append("Faculty Interview: "+ f["FacultyFirst"] + " " + interviewer)
-                        if i not in interview_slots: #If no interview, append info for optional tours
-                            times.append(slots.loc[i]["Time"]) 
-                            names.append(text1)
-                            location.append(text2)
+                                names.append("Faculty Interview: "+ f["FacultyFirst"] + " " + interviewer)
+                    if i not in interview_slots: #If no interview, append info for optional tours
+                        times.append(slots.loc[i]["Time"]) 
+                        names.append(text1)
+                        location.append(text2)
                 
                 #Append events that are the same for every itinerary
                 times.append("12:00pm - 12:55pm")
