@@ -7,7 +7,6 @@ import platform
 
 #TO DO:
     #Add GPP contingency
-    #Change location of "interview" schedule
     #Format for printing
 
 opening = r"""
@@ -54,10 +53,7 @@ def print_interview_table(outfile, header, slot_times, names, slot_location):
     header = """\
 <table style="font-family:arial;">
   <tr>
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#5D7B9D"><font color="#fff">Time</font></th> 
-   <th style="text-align:center; font-size:120%" width=50%" bgcolor="#5D7B9D"><font color="#fff">Interview</font></th>   
-   <th style="text-align:center; font-size:120%" width=25%" bgcolor="#5D7B9D"><font color="#fff">Location</font></th>
-   
+   <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
   </tr>
 """
     outfile.write(header)
@@ -75,77 +71,62 @@ def print_interview_table(outfile, header, slot_times, names, slot_location):
 """
         outfile.write(rowtext)
         
-        rowtext = f"""<td style="text-align:center" width=50%>{slot_location[i]}</td></tr>"""
+        rowtext = f"""<td style="text-align:center" width=25%>{slot_location[i]}</td></tr>"""
 
     
         outfile.write(rowtext)
-    outfile.write("</table>")
-    
+    outfile.write("</table>")    
 
+def print_dayone(outfile):
+    t = f"""\
+        <br>
+        <center>
+        <h3>Thursday, February 13</h3>
+        </center>
 
+        <table style="font-family:arial;">
+          <tr>
+           <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
+          </tr>
+          
+          <tbody>
+          <tr>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 1:00pm - 5:00pm  </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Arrival </strong> </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Hampton Inn & Suites Providence Downtown <br> <em> 58 Weybosset St. <br> Providence, RI <br> 401-608-3500 </em>  </td>
+          </tr>
+          <tr>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 3:00pm - 6:00pm  </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Meet current students </strong> in the hotel lobby and collect welcome bags, including your itinerary  </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Hampton Inn & Suites Providence Downtown </td>
+          </tr>
+          <tr>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 5:45pm & 6:15pm  </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Transportation to dinner - shuttle service </strong> </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Meet in hotel lobby </td>
+          </tr>
+          <tr>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 6:00pm - 8:30pm  </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Dinner with students and faculty (casual) </strong> </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Flatbread <br> <em> 161 Cushing St. <br> Providence, RI </em> </td>
+          </tr>
+          <tr>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 8:00pm & 8:30pm  </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Transportation to hotel - shuttle service </strong> </td>
+          <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Flatbread </td>
+          </tr>
+
+          </tbody>
+          </table>
+        """
+    outfile.write(t)
 
 def print_extras(outfile):
     t = f"""\
 
 
 
-<br>
-<center>
-<h3>Thursday, February 13</h3>
-</center>
-
-<table style="font-family:arial;">
-  <tr>
-   <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
-  </tr>
-  
-  <tbody>
-  <tr>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 1:00pm - 5:00pm  </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Arrival </strong> </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Hampton Inn & Suites Providence Downtown <br> <em> 58 Weybosset St. <br> Providence, RI <br> 401-608-3500 </em>  </td>
-  </tr>
-  <tr>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 3:00pm - 6:00pm  </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Meet current students </strong> in the hotel lobby and collect welcome bags, including your itinerary  </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Hampton Inn & Suites Providence Downtown </td>
-  </tr>
-  <tr>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 5:45pm & 6:15pm  </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Transportation to dinner - shuttle service </strong> </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Meet in hotel lobby </td>
-  </tr>
-  <tr>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 6:00pm - 8:30pm  </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Dinner with students and faculty (casual) </strong> </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Flatbread <br> <em> 161 Cushing St. <br> Providence, RI </em> </td>
-  </tr>
-  <tr>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> 8:00pm & 8:30pm  </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> <strong> Transportation to hotel - shuttle service </strong> </td>
-  <td style="text-align:center; font-size:100%" width=25%" bgcolor="#FFFFFF"> Flatbread </td>
-  </tr>
-
-  </tbody>
-  </table>
-  
-
-
-
-<br>
-<center>
-<h3>Friday, February 14 </h3>
-</center>
-
-<table style="font-family:arial;">
-  <tr>
-   <th colspan="3" style="text-align:center; font-size:150%" bgcolor="#e5b8b7"><font color="#000"></font></th>
-  </tr>
-</table>
-
 <div style="page-break-before:always;">
-
-
 
 <br>
 <center>
@@ -179,8 +160,9 @@ def print_extras(outfile):
 
 """
     outfile.write(t)
-# Want the following: (1) For possible interview slots - if interview time_slot is empty then text is "Optional Tours or Panels" and also hard code lunch in the middle of a table?
-# (2) Have a GPP case for a specific time slot that will be their group meeting
+    
+
+
 body2 = """\
 
 <br>
@@ -333,7 +315,8 @@ if __name__ == "__main__":
                 outfile.write(opening.format(recruit_goesby=recruit_goesby, recruit_last=recruit_last))
                 outfile.write(style)
                 outfile.write(body1.format(recruit_goesby=recruit_goesby, recruit_last=recruit_last, recruit_itinerary=recruit_itinerary,host_last=recruit_host_last, host_first=recruit_host_goesby))
-                print_interview_table(outfile, "Interviews (Friday, February 14)", times_sorted, names_sorted, location_sorted)
+                print_dayone(outfile)
+                print_interview_table(outfile, "Friday, February 14", times_sorted, names_sorted, location_sorted)
             
 #######
                 
@@ -343,6 +326,8 @@ if __name__ == "__main__":
                 else:
                     outfile.write(body3.format(host_last=recruit_host_last, host_first=recruit_host_goesby, host_email=recruit_host_email,
                                                host_last2=recruit_host_last2, host_first2=recruit_host_goesby2, host_email2=recruit_host_email2))
+
+                
 
                 if platform.system() == "Windows":
                     converter = "wkhtmltopdf.exe"
