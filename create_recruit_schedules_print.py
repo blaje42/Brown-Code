@@ -5,9 +5,6 @@ import pandas as pd
 import numpy as np
 import platform
 
-#TO DO:
-    #Add GPP contingency
-    #Format for printing
 
 opening = r"""
 <!DOCTYPE html>  
@@ -272,6 +269,7 @@ if __name__ == "__main__":
         time_slot = []
         text1 = "Optional tours"
         text2 = "Meet in SFH 3rd floor lobby"
+        gpp_meeting_slot = 141130 #slot time for gpp group meeting
 
         #For each interview, pull relevant interviewer data
         if len(interview_slots):
@@ -293,11 +291,18 @@ if __name__ == "__main__":
                             else:
                                 names.append("Faculty Interview: "+ f["FacultyFirst"] + " " + interviewer)
                     if i not in interview_slots: #If no interview, append info for optional tours
+                        #GPP students have group meeting during one of the interview slots
+                        if i==gpp_meeting_slot and (recruit_program=="GPP" or recruit_program=="NSGP GPP"):
+                            times.append(slots.loc[i]["Time"]) 
+                            names.append("GPP Group Meeting")
+                            location.append("SFH ???")
+                            
                         times.append(slots.loc[i]["Time"]) 
                         names.append(text1)
                         location.append(text2)
                 
                 #Append events that are the same for every itinerary
+                
                 times.append("12:00pm - 12:55pm")
                 names.append("Lunch")
                 time_slot.append(141200)
